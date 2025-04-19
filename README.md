@@ -1,9 +1,9 @@
 **VideoToTxt**
 
-```
-Body Language and Emotion Recognition - Video to Text (JSON)
 
-26 categories
+**Body Language and Emotion Recognition - Video to Text (JSON)**
+
+**26 categories**
 
 1. **Affection**: fond feelings; love; tenderness
 2. **Anger**: intense displeasure or rage; furious; resentful
@@ -31,7 +31,7 @@ Body Language and Emotion Recognition - Video to Text (JSON)
 24. **Surprise**: sudden discovery of something unexpected
 25. **Sympathy**: state of sharing others emotions, goals or troubles; supportive; compassionate
 26. **Yearning**: strong desire to have something; jealous; envious; lust
-```
+
 
 ```
 ├── src
