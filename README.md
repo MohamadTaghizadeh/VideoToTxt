@@ -10,13 +10,13 @@
 
 1. **Affection**: fond feelings; love; tenderness
 2. **Anger**: intense displeasure or rage; furious; resentful
-3. **Annoyance**: bothered by something or someone; irritated; impatient; frustrated
+3. **Annoyance**: bothered by something or someone; irritated; impatient; frustrated
 4. **Anticipation**: state of looking forward; hoping on or getting prepared for possible future events
 5. **Aversion**: feeling disgust, dislike, repulsion; feeling hate
 6. **Confidence**: feeling of being certain; conviction that an outcome will be favorable; encouraged; proud
 7. **Disapproval**: feeling that something is wrong or reprehensible; contempt; hostile
 8. **Disconnection**: feeling not interested in the main event of the surrounding; indifferent; bored; distracted
-9. **Disquietment**: nervous; worried; upset; anxious; tense; pressured; alarmed
+9. **Disquietment**: nervous; worried; upset; anxious; tense; pressured; alarmed
 10. **Doubt/Confusion**: difficulty to understand or decide; thinking about different options
 11. **Embarrassment**: feeling ashamed or guilty
 12. **Engagement**: paying attention to something; absorbed into something; curious; interested
@@ -30,7 +30,7 @@
 20. **Pleasure**: feeling of delight in the senses
 21. **Sadness**: feeling unhappy, sorrow, disappointed, or discouraged
 22. **Sensitivity**: feeling of being physically or emotionally wounded; feeling delicate or vulnerable
-23. **Suffering**: psychological or emotional pain; distressed; anguished
+23. **Suffering**: psychological or emotional pain; distressed; anguished
 24. **Surprise**: sudden discovery of something unexpected
 25. **Sympathy**: state of sharing others emotions, goals or troubles; supportive; compassionate
 26. **Yearning**: strong desire to have something; jealous; envious; lust
