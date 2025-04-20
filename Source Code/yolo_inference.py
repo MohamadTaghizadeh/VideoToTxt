@@ -104,7 +104,7 @@ def yolo_infer(images_list, result_path, model_path, context_norm, body_norm, in
     print ('completed inference for image %d'  %(idx))
 
 
-def yolo_video(video_file, result_path, model_path, context_norm, body_norm, ind2cat, ind2vad, args):
+def yolo_video(video_file, result_path, model_path, context_norm, body_norm, ind2cat, ind2vad, args, skip_frames=9):
     ''' Perform inference on a video. First yolo model is used to obtain bounding boxes of persons in every frame.
     After that the emotic model is used to obtain categoraical and continuous emotion predictions. 
     :param video_file: Path of video file. 
@@ -130,12 +130,26 @@ def yolo_video(video_file, result_path, model_path, context_norm, body_norm, ind
     emotic_model.eval()
     models = [model_context, model_body, emotic_model]
 
-    # Data storage
+    # Enhanced data storage with averages
     frame_data = {
-        'categories': defaultdict(list),
-        'vad': {'valence': [], 'arousal': [], 'dominance': []},
-        'frame_count': 0
+        'frame_numbers': [],
+        'categories': {cat: [] for cat in ind2cat.values()},
+        'vad': {
+            'valence': [],
+            'arousal': [],
+            'dominance': [],
+            'valence_av': 0,  # Will store average
+            'arousal_av': 0,
+            'dominance_av': 0,
+            'valence_percent': 0,  # Will store percentage
+            'arousal_percent': 0,
+            'dominance_percent': 0
+        },
+        'person_detected': [],
+        'processed_frames': 0,
+        'skip_frames': skip_frames
     }
+
 
     video_stream = cv2.VideoCapture(video_file)
     writer = None
@@ -144,28 +158,85 @@ def yolo_video(video_file, result_path, model_path, context_norm, body_norm, ind
     temp_avi_path = os.path.join(result_path, 'temp_result.avi')
     final_mp4_path = os.path.join(result_path, 'result_vid.mp4')
 
-    print('Starting testing on video')
+    print(f'Starting testing on video with frame skipping (every {skip_frames+1} frames)')
+    frame_count = 0
+    processed_count = 0
+
     while True:
         (grabbed, frame) = video_stream.read()
         if not grabbed:
             break
+
+        frame_count += 1
+
+        # Skip frames according to parameter
+        if skip_frames > 0 and frame_count % (skip_frames + 1) != 1:
+            continue
+
+        processed_count += 1
+        frame_data['frame_numbers'].append(frame_count)
+        frame_data['processed_frames'] = processed_count
         image_context = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        person_detected = False
 
         try: 
             bbox_yolo = get_bbox(yolo, device, image_context)
-            for pred_idx, pred_bbox in enumerate(bbox_yolo):
-                pred_cat, pred_cont = infer(context_norm, body_norm, ind2cat, ind2vad, device, thresholds, models, image_context=image_context, bbox=pred_bbox, to_print=False)
-                write_text_vad = list()
-                for continuous in pred_cont:
-                    write_text_vad.append(str('%.1f' %(continuous)))
-                write_text_vad = 'vad ' + ' '.join(write_text_vad) 
-                image_context = cv2.rectangle(image_context, (pred_bbox[0], pred_bbox[1]),(pred_bbox[2] , pred_bbox[3]), (255, 0, 0), 3)
-                cv2.putText(image_context, write_text_vad, (pred_bbox[0], pred_bbox[1] - 5), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255), 2)
-                for i, emotion in enumerate(pred_cat):
-                    cv2.putText(image_context, emotion, (pred_bbox[0], pred_bbox[1] + (i+1)*12), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255), 2)
-        except Exception:
-            pass
-            
+            if len(bbox_yolo) > 0:
+               person_detected = True
+               for pred_bbox in bbox_yolo:
+                    # Enable printing for debugging
+                    pred_cat, pred_cont = infer(context_norm, body_norm, ind2cat, ind2vad,
+                                              device, thresholds, models,
+                                              image_context=image_context,
+                                              bbox=pred_bbox,
+                                              to_print=True)  # Changed to True for debugging
+                    
+                    print(f"Frame {frame_count} - VAD: {pred_cont} - Cats: {pred_cat}")  # Debug print
+                    
+                    # Store results
+                    frame_data['vad']['valence'].append(float(pred_cont[0]))
+                    frame_data['vad']['arousal'].append(float(pred_cont[1]))
+                    frame_data['vad']['dominance'].append(float(pred_cont[2]))
+                    
+                    # Track all categories
+                    for cat in ind2cat.values():
+                        frame_data['categories'][cat].append(1 if cat in pred_cat else 0)
+
+                    # Draw on frame
+                    write_text_vad = 'vad ' + ' '.join([f'{v:.1f}' for v in pred_cont])
+                    image_context = cv2.rectangle(image_context, 
+                                                (pred_bbox[0], pred_bbox[1]),
+                                                (pred_bbox[2], pred_bbox[3]), 
+                                                (255, 0, 0), 3)
+                    cv2.putText(image_context, write_text_vad, 
+                               (pred_bbox[0], pred_bbox[1] - 5), 
+                               cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255), 2)
+                    for i, emotion in enumerate(pred_cat):
+                        cv2.putText(image_context, emotion, 
+                                   (pred_bbox[0], pred_bbox[1] + (i+1)*12), 
+                                   cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255), 2)
+                    
+
+            # Handle frames without detections
+            frame_data['person_detected'].append(person_detected)
+            # Ensure we have data for all frames
+            if not person_detected:
+                frame_data['vad']['valence'].append(0.0)
+                frame_data['vad']['arousal'].append(0.0)
+                frame_data['vad']['dominance'].append(0.0)
+                for cat in ind2cat.values():
+                    frame_data['categories'][cat].append(0)
+                    
+        except Exception as e:
+            print(f"Error processing frame {frame_count}: {str(e)}")
+            frame_data['person_detected'].append(False)
+            frame_data['vad']['valence'].append(0.0)
+            frame_data['vad']['arousal'].append(0.0)
+            frame_data['vad']['dominance'].append(0.0)
+            for cat in ind2cat.values():
+                frame_data['categories'][cat].append(0)
+
+        # Write frame to video    
         if writer is None:
             # Use MJPG codec for AVI which is widely supported
             fourcc = cv2.VideoWriter_fourcc(*'MJPG')
@@ -174,7 +245,20 @@ def yolo_video(video_file, result_path, model_path, context_norm, body_norm, ind
         
         writer.write(cv2.cvtColor(image_context, cv2.COLOR_RGB2BGR))
     
-    # Release resources
+# Calculate VAD averages and percentages
+    if len(frame_data['vad']['valence']) > 0:
+        frame_data['vad']['valence_av'] = np.mean(frame_data['vad']['valence'])
+        frame_data['vad']['arousal_av'] = np.mean(frame_data['vad']['arousal'])
+        frame_data['vad']['dominance_av'] = np.mean(frame_data['vad']['dominance'])
+        
+        # Convert to percentage (since VAD is 0-10 scale)
+        frame_data['vad']['valence_percent'] = frame_data['vad']['valence_av'] * 10
+        frame_data['vad']['arousal_percent'] = frame_data['vad']['arousal_av'] * 10
+        frame_data['vad']['dominance_percent'] = frame_data['vad']['dominance_av'] * 10
+
+
+
+    # Release resources # Cleanup and save results
     writer.release()
     video_stream.release() 
     
@@ -200,11 +284,15 @@ def yolo_video(video_file, result_path, model_path, context_norm, body_norm, ind
         print(f"Error converting to MP4: {str(e)}")
         print(f"Original AVI file saved at: {temp_avi_path}")
 
-    print('Completed video processing')
-
+    
     # After processing:
     generate_plots(frame_data, result_path)
-    save_data(frame_data, result_path)
+    # Save results before exiting
+    save_video_results(frame_data, result_path, ind2cat)
+
+    print(f'Completed processing {processed_count} frames (skipped every {skip_frames} frames)')
+
+    
 
 
 def yolo_webcam(result_path, model_path, context_norm, body_norm, ind2cat, ind2vad, args):
@@ -234,6 +322,7 @@ def yolo_webcam(result_path, model_path, context_norm, body_norm, ind2cat, ind2v
         'vad': {'valence': [], 'arousal': [], 'dominance': []},
         'frame_count': 0
     }
+    
 
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
@@ -314,51 +403,55 @@ def generate_plots(frame_data, result_path):
     plt.savefig(os.path.join(result_path, 'category_detection.png'))
     plt.close()
 
-    # Plot VAD values
-    plt.figure(figsize=(10, 6))
-    for dim, values in frame_data['vad'].items():
-        plt.plot(values, label=dim)
-    plt.title('VAD Values Over Frames')
-    plt.xlabel('Frame Number')
-    plt.ylabel('Value')
-    plt.legend()
-    plt.savefig(os.path.join(result_path, 'vad_values.png'))
-    plt.close()
-
-
-def save_data(frame_data, result_path):
-    """Save data to text and JSON files."""
-    # Calculate means
-    mean_v = np.mean(frame_data['vad']['valence']) if frame_data['vad']['valence'] else 0
-    mean_a = np.mean(frame_data['vad']['arousal']) if frame_data['vad']['arousal'] else 0
-    mean_d = np.mean(frame_data['vad']['dominance']) if frame_data['vad']['dominance'] else 0
-
-    # Save to JSON
-    output = {
-        'vad_values': frame_data['vad'],
-        'category_detection': frame_data['categories'],
-        'mean_values': {
-            'mean_valence': mean_v,
-            'mean_arousal': mean_a,
-            'mean_dominance': mean_d
-        },
-        'total_frames': frame_data['frame_count']
-    }
-
-    with open(os.path.join(result_path, 'output.json'), 'w') as f:
-        json.dump(output, f, indent=4)
-
-    # Save to text file
-    with open(os.path.join(result_path, 'output.txt'), 'w') as f:
-        f.write("VAD Mean Values:\n")
-        f.write(f"Valence: {mean_v:.2f}\n")
-        f.write(f"Arousal: {mean_a:.2f}\n")
-        f.write(f"Dominance: {mean_d:.2f}\n\n")
+def save_video_results(frame_data, result_path, ind2cat):
+    
+    """Save results with proper validation and plotting."""
+    # Create directory if it doesn't exist
+    os.makedirs(result_path, exist_ok=True)
+    
+    # Save raw data
+    with open(os.path.join(result_path, 'video_results.json'), 'w') as f:
+        json.dump(frame_data, f, indent=2)
+    
+    # Calculate detection rate
+    detection_rate = sum(frame_data['person_detected'])/len(frame_data['person_detected'])
+    print(f"Person detection rate: {detection_rate*100:.1f}%")
+    
+    # Only plot if we have detections
+    if sum(frame_data['person_detected']) > 0:
+        # VAD Plot
+        plt.figure(figsize=(12, 6))
+        plt.plot(frame_data['frame_numbers'], frame_data['vad']['valence'], label='Valence')
+        plt.plot(frame_data['frame_numbers'], frame_data['vad']['arousal'], label='Arousal')
+        plt.plot(frame_data['frame_numbers'], frame_data['vad']['dominance'], label='Dominance')
+        plt.xlabel('Frame Number')
+        plt.ylabel('Value')
+        plt.title('VAD Values Over Frame')
+        plt.legend()
+        plt.savefig(os.path.join(result_path, 'vad_values.png'))
+        plt.close()
         
-        f.write("Category Detection Counts:\n")
-        for cat, values in frame_data['categories'].items():
-            count = sum(values)
-            f.write(f"{cat}: {count} frames ({count/frame_data['frame_count']*100:.1f}%)\n")
+        # Category Plot (only show detected categories)
+        detected_cats = [cat for cat in ind2cat.values() 
+                        if sum(frame_data['categories'][cat]) > 0]
+        if detected_cats:
+            plt.figure(figsize=(15, 6))
+            for cat in detected_cats:
+                plt.plot(frame_data['frame_numbers'], 
+                        frame_data['categories'][cat], 
+                        label=cat)
+            plt.xlabel('Frame Number')
+            plt.ylabel('Detection (1=Present)')
+            plt.title('Category Detection')
+            plt.legend(bbox_to__anchor=(1.05, 1), loc='upper left')
+            plt.tight_layout()
+            plt.savefig(os.path.join(result_path, 'category_plot.png'), dpi=300)
+            plt.close()
+    else:
+        print("No persons detected - skipping plots")
+
+
+
 
 def check_paths(args):
   ''' Check (create if they don't exist) experiment directories.
