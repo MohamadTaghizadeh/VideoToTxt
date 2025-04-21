@@ -60,10 +60,17 @@
 │   ├── template
 ```
 
+<header>
+  
+  # Run
+  
+<header>
 
+> Run
 
-
-
+```
+!python main.py --mode vedio --inference_file ./assets/raw.mp4 --experiment_path ./proj/debug_ex
+```
 
 <header>
   
