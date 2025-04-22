@@ -285,10 +285,11 @@ def yolo_video(video_file, result_path, model_path, context_norm, body_norm, ind
         print(f"Original AVI file saved at: {temp_avi_path}")
 
     
-    # After processing:
-    generate_plots(frame_data, result_path)
+    
     # Save results before exiting
     save_video_results(frame_data, result_path, ind2cat)
+    # After processing:
+    generate_plots(frame_data, result_path, ind2cat)
 
     print(f'Completed processing {processed_count} frames (skipped every {skip_frames} frames)')
 
@@ -389,30 +390,59 @@ def yolo_webcam(result_path, model_path, context_norm, body_norm, ind2cat, ind2v
         save_data(frame_data, result_path)
 
 
-def generate_plots(frame_data, result_path):
-    """Generate plots for categories and VAD values."""
-    # Plot categories
-    plt.figure(figsize=(15, 8))
-    for cat, values in frame_data['categories'].items():
-        plt.plot(values, label=cat)
-    plt.title('Category Detection Over Frames')
-    plt.xlabel('Frame Number')
-    plt.ylabel('Detection (1=Present, 0=Absent)')
-    plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
-    plt.tight_layout()
-    plt.savefig(os.path.join(result_path, 'category_detection.png'))
-    plt.close()
-
+def generate_plots(frame_data, result_path, ind2cat):
+    """Generate plots with percentages."""
+    if len(frame_data['frame_numbers']) == 0:
+        return
+    
+    # Category Plot with percentages
+    detected_cats = [cat for cat in ind2cat.values() 
+                    if sum(frame_data['categories'][cat]) > 0]
+    
+    if detected_cats:
+        plt.figure(figsize=(15, 8))
+        for cat in detected_cats:
+            percent = frame_data['category_percent'][cat] if 'category_percent' in frame_data else 0.0
+            plt.plot(frame_data['frame_numbers'], 
+                    frame_data['categories'][cat], 
+                    label=f"{cat} ({percent:.1f}%)")
+        
+        plt.xlabel('Frame Number')
+        plt.ylabel('Detection (1=Present)')
+        plt.title('Category Detection with Percentages')
+        plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+        plt.tight_layout()
+        plt.savefig(os.path.join(result_path, 'category_detection.png'), dpi=300)
+        plt.close()
+    
 def save_video_results(frame_data, result_path, ind2cat):
     
     """Save results with proper validation and plotting."""
     # Create directory if it doesn't exist
     os.makedirs(result_path, exist_ok=True)
     
-    # Save raw data
+    # Calculate category percentages
+    total_frames = len(frame_data['frame_numbers'])
+    category_percent = {}
+    
+    for cat in ind2cat.values():
+        if total_frames > 0:
+            detection_count = sum(frame_data['categories'][cat])
+            category_percent[cat] = (detection_count / total_frames) * 100
+        else:
+            category_percent[cat] = 0.0
+    
+    # Add to frame_data
+    
+    frame_data['category_percent'] = category_percent
+
+    # Save raw data (JSON)
     with open(os.path.join(result_path, 'video_results.json'), 'w') as f:
         json.dump(frame_data, f, indent=2)
     
+    # Generate plots
+    generate_plots(frame_data, result_path, ind2cat)
+
     # Calculate detection rate
     detection_rate = sum(frame_data['person_detected'])/len(frame_data['person_detected'])
     print(f"Person detection rate: {detection_rate*100:.1f}%")
