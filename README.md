@@ -49,17 +49,65 @@ In progress...
 
 >Folder structure:
 ```
-├── src
-│   ├── engine
-│   |    ├── confing
-│   |    ├── core
-│   ├── backend
-│   |    ├── confing
-│   |    ├── core
-│   |    ├── dbutils
-│   ├── rabbit
-│   |    ├── confing
-│   ├── template
+Computer_vision
+          ├── Models
+          |   ├── VideoToTxt
+          |   ├── 
+          |   ├──
+          |   ..
+          |   ├── .gitignore
+          ├── Outputs
+          |   ├── VideoToTxt
+          |       ├── .gitignore
+          |   ├── 
+          |   ├──
+          |   ..
+          ├── Samples
+          ├── Scource code
+              ├── VideoToTxt
+                  ├── VideoToTxt ─── src
+                  ├── .gitignore      |
+                                      ├── engine
+                                      |    ├── confing
+                                      |           ├── conf-dev.yml
+                                      |           ├── conf-prod.yml
+                                      |           ├── conf_handler.yml
+                                      |    ├── core
+                                      |           ├── queue_utils.py
+                                      |    ├── Dockerfile
+                                      |    ├── cmd.sh
+                                      |    ├── main.py
+                                      |    ├── requirements.txt
+                                      |    ├── utils.py
+                                      |    ├── version.py
+                                      ├── backend
+                                      |    ├── confing
+                                      |           ├── conf-dev.yml
+                                      |           ├── conf-prod.yml
+                                      |           ├── conf_handler.yml
+                                      |    ├── core
+                                      |           ├── base.py
+                                      |           ├── messages.py
+                                      |           ├── queue_utils.py
+                                      |           ├── utils.py
+                                      |           ├── webhook_handler.py
+                                      |    ├── dbutils
+                                      |           ├── crud.py
+                                      |           ├── database.py
+                                      |           ├── models.py
+                                      |           ├── schemas.py
+                                      |    ├── Dockerfile
+                                      |    ├── cmd.sh
+                                      |    ├── mainapi.py
+                                      |    ├── requirements.txt
+                                      |    ├── version.py
+                                      ├── rabbitmq
+                                      |    ├── confing
+                                      |           ├── rabbitmq.conf
+                                      ├── template
+                                      |           ├── env
+                                      ├── .gitignore
+                                      ├── docker-compose.yml
 ```
 
 <header>
