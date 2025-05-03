@@ -5,6 +5,12 @@ In progress...
   # VideoToTxt
   
   </header>
+  
+**The Diagram**:
+![VideoToTxt(Mohamad Taghizadeh)](https://github.com/user-attachments/assets/241e9a98-3e15-4745-91dd-6e5c8b34ebe0)
+
+**Here is the detailed structure**:
+![VideoToTxt diagram(Mohamad Taghizadeh)](https://github.com/user-attachments/assets/df9aa459-80b4-4bcb-88a2-c8a98b98f364)
 
 **Body Language and Emotion Recognition - Video to Text (JSON)**
 
