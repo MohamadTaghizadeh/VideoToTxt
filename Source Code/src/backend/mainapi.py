@@ -153,4 +153,4 @@ async def get_status(request_id: str, db: Session = Depends(base.get_db)):
 
 
 if __name__ == "__main__":
-    uvicorn.run(app="mainapi:app", host="0.0.0.0", port=7000, reload=False)
+    uvicorn.run(app="mainapi:app", host="0.0.0.0", port=8000, reload=False)
