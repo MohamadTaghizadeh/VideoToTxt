@@ -1,1 +1,6 @@
-
+AIHIVE_ADDR: http://api.robin-co.com
+BASE_URL_FILE_LINK: http://192.168.0.161:7000
+CONSOLE_LOG_LEVEL: INFO
+FILE_LOG_LEVEL: INFO
+QUEUE_CONNECTION: amqp://guest:guest@queue/
+MODEL_ID: video-to-txt
