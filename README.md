@@ -15,7 +15,9 @@ In progress...
   
 **The Diagram**:
 
-<img src="https://github.com/user-attachments/assets/241e9a98-3e15-4745-91dd-6e5c8b34ebe0" alt="VideoToTxt(Mohamad Taghizadeh)" width="500" height="300">
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/241e9a98-3e15-4745-91dd-6e5c8b34ebe0" alt="VideoToTxt(Mohamad Taghizadeh)" width="500" height="300">
+</div>
 
 **Here is the detailed structure**:
 ![VideoToTxt diagram(Mohamad Taghizadeh)](https://github.com/user-attachments/assets/df9aa459-80b4-4bcb-88a2-c8a98b98f364)
