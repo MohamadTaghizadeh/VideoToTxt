@@ -1,9 +1,9 @@
 In progress...
-> update model
+> update model code
 
 > update utils
 
-> upload model?
+> model source
 
 > Docker Image
 
