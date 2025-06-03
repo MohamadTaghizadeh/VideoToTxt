@@ -11,7 +11,7 @@ In progress...
 
 > Directories
 
-> security vulnerablity
+> security vulnerablity >> for operation phase is important (we isolate)
 <header>
   
   # VideoToTxt
@@ -169,4 +169,5 @@ https://github.com/user-attachments/assets/bc226bb1-9fec-4600-8522-a9920613c885
 ## Start to Dockerize
 
 Updating...
+> Build Image
 
