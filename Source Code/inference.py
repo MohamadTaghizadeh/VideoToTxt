@@ -104,10 +104,10 @@ def inference_emotic(images_list, model_path, result_path, context_norm, body_no
     lines = f.readlines()
   
   device = torch.device("cuda:%s" %(str(args.gpu)) if torch.cuda.is_available() else "cpu")
-  thresholds = torch.FloatTensor(np.load(os.path.join(result_path, '/home/robin/M/Body-Language-and-Emotion-Recognition/deploy/api/proj/debug_exp/results/val_thresholds.npy'))).to(device) 
-  model_context = torch.load(os.path.join(model_path,'/home/robin/M/Body-Language-and-Emotion-Recognition/models/model_context1.pth'), weights_only=False).to(device)
-  model_body = torch.load(os.path.join(model_path,'/home/robin/M/Body-Language-and-Emotion-Recognition/models/model_body1.pth'), weights_only=False).to(device)
-  emotic_model = torch.load(os.path.join(model_path,'/home/robin/M/Body-Language-and-Emotion-Recognition/models/model_emotic1.pth'), weights_only=False).to(device)
+  thresholds = torch.FloatTensor(np.load(os.path.join(result_path, './val_thresholds.npy'))).to(device) 
+  model_context = torch.load(os.path.join(model_path,'./model_context1.pth'), weights_only=False).to(device)
+  model_body = torch.load(os.path.join(model_path,'./model_body1.pth'), weights_only=False).to(device)
+  emotic_model = torch.load(os.path.join(model_path,'./model_emotic1.pth'), weights_only=False).to(device)
 
   model_context.eval()
   model_body.eval()
