@@ -1,16 +1,17 @@
 In progress...
 > start local
 
-> data
-> add new files
+> data - StyleGAN
 
-> update model code
+> add new files [completed]
 
-> update utils
+> update model code [completed]
 
-> model source
+> update utils [completed]
 
-> Docker Image
+> model source [completed]
+
+> Docker
 
 > Directories
 
