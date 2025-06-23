@@ -10,10 +10,8 @@ from emotic import Emotic
 from inference import infer
 from yolo_utils import prepare_yolo, rescale_boxes, non_max_suppression
 
-
 import json
 import matplotlib.pyplot as plt
-#from collections import defaultdict
 
 
 def parse_args():
