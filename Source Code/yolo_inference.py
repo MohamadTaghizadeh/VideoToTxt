@@ -50,7 +50,7 @@ def yolo_video(video_file, result_path, model_path, context_norm, body_norm, ind
     yolo = prepare_yolo(model_path).to(device).eval()
     thresholds = torch.FloatTensor(np.load(os.path.join(model_path, 'val_thresholds.npy'))).to(device)
     
-    # Load emotion models
+    # Load models
     model_context = torch.load(os.path.join(model_path,'model_context1.pth'), weights_only=False).to(device).eval()
     model_body = torch.load(os.path.join(model_path,'model_body1.pth'), weights_only=False).to(device).eval()
     emotic_model = torch.load(os.path.join(model_path,'model_emotic1.pth'), weights_only=False).to(device).eval()
