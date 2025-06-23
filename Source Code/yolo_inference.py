@@ -6,7 +6,6 @@ import os
 import torch 
 from torchvision import transforms
 
-from emotic import Emotic 
 from inference import infer
 from yolo_utils import prepare_yolo, rescale_boxes, non_max_suppression
 
