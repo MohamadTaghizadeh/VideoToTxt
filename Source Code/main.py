@@ -35,7 +35,6 @@ if __name__ == '__main__':
     args = parse_args()
     print ('mode ', args.mode)
 
-    #result_path, model_path, train_log_path, val_log_path = check_paths(args)
     result_path, model_path = check_paths(args)
 
     cat = ['Affection', 'Anger', 'Annoyance', 'Anticipation', 'Aversion', 'Confidence', 'Disapproval', 'Disconnection', \
