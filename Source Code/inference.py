@@ -5,8 +5,6 @@ import os
 import torch 
 from torchvision import transforms
 
-from emotic import Emotic 
-
 
 def process_images(context_norm, body_norm, image_context_path=None, image_context=None, image_body=None, bbox=None):
 
