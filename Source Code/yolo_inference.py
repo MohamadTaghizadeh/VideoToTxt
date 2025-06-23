@@ -11,7 +11,6 @@ from inference import infer
 from yolo_utils import prepare_yolo, rescale_boxes, non_max_suppression
 
 import json
-import matplotlib.pyplot as plt
 
 
 def parse_args():
