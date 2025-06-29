@@ -24,7 +24,7 @@ RUN python -m pip install --upgrade pip
     pip install --no-cache-dir opencv-python==4.11.0.86 && \
     pip install --no-cache-dir torch==2.7.1 && \
     pip install --no-cache-dir torchvision==0.22.1 && \
-
+    pip install --no-cache-dir ffmpeg-python==0.2.0 && \
 
 
 
