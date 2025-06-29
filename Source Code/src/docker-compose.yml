@@ -3,7 +3,7 @@ services:
   queue:
     image: rabbitmq:4.0.6-management
     ports:
-      - ${PORT_RABBIT_MANAGEMENT}:15672
+      - ${PORT_RABBIT_MANAGEMENT}:9009
     volumes:
       - ../Outputs/rabbitmq_logs:/var/log/rabbitmq
       - ../Outputs/rabbitmq_data:/var/lib/rabbitmq
@@ -52,7 +52,7 @@ services:
         - PIP_TIMEOUT=500
     command: bash ./cmd.sh
     ports:
-      - ${PORT_BACKEND}:7000
+      - ${PORT_BACKEND}:8009
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./src/backend:/approot/src
