@@ -3,7 +3,7 @@ services:
   queue:
     image: rabbitmq:4.0.6-management
     ports:
-      - ${PORT_RABBIT_MANAGEMENT}:9009
+      - ${PORT_RABBIT_MANAGEMENT}:15672
     volumes:
       - ../Outputs/rabbitmq_logs:/var/log/rabbitmq
       - ../Outputs/rabbitmq_data:/var/lib/rabbitmq
