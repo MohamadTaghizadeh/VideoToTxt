@@ -1,5 +1,5 @@
-# Use Python 3.9 as base image
-FROM python:3.9-slim
+# Use Python 3.12.0 as base image
+FROM python:3.12.0
 
 WORKDIR /approot/src
 ENV LANG=C.UTF-8
@@ -20,6 +20,9 @@ RUN python -m pip install --upgrade pip
 
 # Install Python dependencies one by one to better handle errors
 
+    pip install --no-cache-dir numpy==2.3.0 && \
+    pip install --no-cache-dir opencv-python==4.11.0.86 && \
+    pip install --no-cache-dir torch==2.7.1 && \
 
 
 
