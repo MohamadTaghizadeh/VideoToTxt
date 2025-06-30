@@ -78,7 +78,7 @@ app.add_middleware(
 base_mdl = base.Base()
 
 
-@app.post("/aihive-videototxt/api/v1/video-to-txt-offline")
+@app.post("/aihive-hrvidtxt/api/v1/video-to-txt-offline")
 async def process_video(
         video: UploadFile = File(...),
         request_id: str = Form(None),
