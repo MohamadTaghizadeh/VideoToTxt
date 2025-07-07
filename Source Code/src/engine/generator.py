@@ -43,11 +43,6 @@ if __name__ == '__main__':
     for idx, emotion in enumerate(cat):
         cat2ind[emotion] = idx
         ind2cat[idx] = emotion
-    
-    vad = ['Valence', 'Arousal', 'Dominance']
-    ind2vad = {}
-    for idx, continuous in enumerate(vad):
-        ind2vad[idx] = continuous
 
     context_mean = [0.4690646, 0.4407227, 0.40508908]
     context_std = [0.2514227, 0.24312855, 0.24266963]
@@ -59,7 +54,7 @@ if __name__ == '__main__':
     if args.mode == 'video':
         if args.inference_file is None:
             raise ValueError('Inference file not provided. Please pass a valid inference file for inference')
-        yolo_video(args.inference_file, result_path, model_path, context_norm, body_norm, ind2cat, ind2vad, args)
+        yolo_video(args.inference_file, result_path, model_path, context_norm, body_norm, ind2cat, args)
 
     else:
         raise ValueError('Unknown mode')
