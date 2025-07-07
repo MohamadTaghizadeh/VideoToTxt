@@ -29,7 +29,7 @@ def process_images(context_norm, body_norm, image_context_path=None, image_conte
   return image_context, image_body  
 
 
-def infer(context_norm, body_norm, ind2cat, ind2vad, device, thresholds, models, image_context_path=None, image_context=None, image_body=None, bbox=None, to_print=True):
+def infer(context_norm, body_norm, ind2cat, device, thresholds, models, image_context_path=None, image_context=None, image_body=None, bbox=None, to_print=True):
 
   image_context, image_body = process_images(context_norm, body_norm, image_context_path=image_context_path, image_context=image_context, image_body=image_body, bbox=bbox)
 
