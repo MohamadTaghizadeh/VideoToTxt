@@ -93,7 +93,7 @@ def yolo_video(video_file, result_path, model_path, context_norm, body_norm, ind
                 person_detected = True
                 for pred_bbox in bbox_yolo:
                     # Get emotion predictions (ignore VAD results with _)
-                    pred_cat, _ = infer(context_norm, body_norm, ind2cat, ind2vad,
+                    pred_cat, _ = infer(context_norm, body_norm, ind2cat,
                                       device, thresholds, models,
                                       image_context=image_context,
                                       bbox=pred_bbox,
