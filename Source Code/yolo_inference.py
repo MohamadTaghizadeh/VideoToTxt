@@ -43,7 +43,7 @@ def get_bbox(yolo_model, device, image_context, yolo_image_size=416, conf_thresh
 
 
 
-def yolo_video(video_file, result_path, model_path, context_norm, body_norm, ind2cat, ind2vad, args, skip_frames=9):
+def yolo_video(video_file, result_path, model_path, context_norm, body_norm, ind2cat, args, skip_frames=9):
     device = torch.device(f"cuda:{args.gpu}" if torch.cuda.is_available() else "cpu")
     
     # Initialize models
