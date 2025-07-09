@@ -1,5 +1,5 @@
-# Use Python 3.9 as base image
-FROM python:3.9-slim
+# Use Python 3.12.0 as base image
+FROM python:3.12.0
 
 ENV LANG=C.UTF-8
 ARG PIP_TIMEOUT=500
