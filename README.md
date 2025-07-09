@@ -3,19 +3,8 @@ In progress...
 
 > data - StyleGAN
 
-> add new files [completed]
-
-> update model code [completed]
-
-> update utils [completed]
-
-> model source [completed]
-
 > Docker
 
-> Directories
-
-> security vulnerablity >> for operation phase is important (we isolate)
 <header>
   
   # VideoToTxt
