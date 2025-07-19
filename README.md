@@ -165,4 +165,7 @@ https://github.com/user-attachments/assets/bc226bb1-9fec-4600-8522-a9920613c885
 
 Updating...
 > Build Image
+```
+docker-compose up --build
+```
 
