@@ -22,7 +22,7 @@ services:
           PIP_INDEX_URL: ${PIP_INDEX_URL}
           PIP_EXTRA_INDEX_URL: ${PIP_EXTRA_INDEX_URL}
           PIP_TRUSTED_HOST: ${PIP_TRUSTED_HOST}
-          PIP_TIMEOUT: 500
+          PIP_TIMEOUT: 1000
           PIP_DISABLE_PIP_VERSION_CHECK: 1
           PIP_NO_CACHE_DIR: 1
           PIP_NO_BINARY: ":all:"
@@ -51,7 +51,7 @@ services:
           PIP_INDEX_URL: ${PIP_INDEX_URL}
           PIP_EXTRA_INDEX_URL: ${PIP_EXTRA_INDEX_URL}
           PIP_TRUSTED_HOST: ${PIP_TRUSTED_HOST}
-          PIP_TIMEOUT: 500
+          PIP_TIMEOUT: 1000
     command: bash ./cmd.sh
     ports:
       - ${PORT_BACKEND}:8009
