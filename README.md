@@ -169,3 +169,17 @@ Updating...
 docker-compose up --build
 ```
 
+> Test Locally. Modify conf_dev.yml (Backend & Engine)
+```
+QUEUE_CONNECTION: amqp://guest:guest@localhost/  
+```
+
+Then, install Rabbitmq
+```
+docker run -p 5672:5672 rabbitmq
+```
+Finally, run Backend and Engine
+```
+uvicorn mainapi:app --host 0.0.0.0 --port 8000
+```
+
