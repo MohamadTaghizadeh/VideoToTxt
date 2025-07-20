@@ -6,7 +6,7 @@ services:
     volumes:
       - ../../Outputs/rabbitmq_logs:/var/log/rabbitmq
       - ../../Outputs/rabbitmq_data:/var/lib/rabbitmq
-      - ./src/rabbitmq/config/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+      - ./rabbitmq/config/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
     environment:
       - TZ=Asia/Tehran
       - RABBITMQ_CONFIG_FILE=/etc/rabbitmq/rabbitmq.conf  # Use the custom config file
@@ -29,7 +29,7 @@ services:
     command: bash ./cmd.sh
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./src/engine:/approot/src
+      - ./engine:/approot/src
       - ../../Models:/approot/models
       - ../../Outputs:/approot/data
     environment:
@@ -45,7 +45,7 @@ services:
       robinnet: null
   backend:
     build:
-      context: ./src/backend
+      context: ./backend
       dockerfile: ./Dockerfile
       args:
           PIP_INDEX_URL: ${PIP_INDEX_URL}
@@ -57,7 +57,7 @@ services:
       - ${PORT_BACKEND}:8009
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./src/backend:/approot/src
+      - ./backend:/approot/src
       - ../Outputs:/approot/data
     environment:
       - TZ=Asia/Tehran
