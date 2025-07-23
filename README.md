@@ -161,6 +161,19 @@ https://github.com/user-attachments/assets/bc226bb1-9fec-4600-8522-a9920613c885
 
 
 
+## Start to local test
+### Terminal 1: RabbitMQ
+```docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:4.0.6-management```
+
+### Terminal 2: Engine 
+```cd ".\src\engine"```
+```python main.py```
+
+### Terminal 3: Backend
+```cd ".\src\backend"```
+```uvicorn mainapi:app --host localhost --port 8000```
+
+--------------------------------------------------------------------------------------
 ## Start to Dockerize
 
 Updating...
