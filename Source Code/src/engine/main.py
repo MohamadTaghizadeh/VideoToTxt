@@ -6,7 +6,40 @@ from loguru import logger
 from config.config_handler import config
 from core.queue_utils import process_message
 
-# Setup logging
+# CRITICAL: Import and register Emotic class in __main__ context
+import torch
+import torch.nn as nn
+
+# Define Emotic class in __main__ module context
+class Emotic(nn.Module):
+    def __init__(self, num_context_features, num_body_features):
+        super(Emotic, self).__init__()
+        self.num_context_features = num_context_features
+        self.num_body_features = num_body_features
+        self.fc1 = nn.Linear((self.num_context_features + num_body_features), 256)
+        self.bn1 = nn.BatchNorm1d(256)
+        self.d1 = nn.Dropout(p=0.5)
+        self.fc_cat = nn.Linear(256, 26)
+        self.fc_cont = nn.Linear(256, 3)
+        self.relu = nn.ReLU()
+
+    def forward(self, x_context, x_body):
+        context_features = x_context.view(-1, self.num_context_features)
+        body_features = x_body.view(-1, self.num_body_features)
+        fuse_features = torch.cat((context_features, body_features), 1)
+        fuse_out = self.fc1(fuse_features)
+        fuse_out = self.bn1(fuse_out)
+        fuse_out = self.relu(fuse_out)
+        fuse_out = self.d1(fuse_out)
+        cat_out = self.fc_cat(fuse_out)
+        cont_out = self.fc_cont(fuse_out)
+        return cat_out, cont_out
+
+# Make it globally available
+globals()['Emotic'] = Emotic
+torch.serialization.add_safe_globals([Emotic])
+
+# Setup logging (rest of your original code stays the same)
 if os.environ.get("MODE", "dev") == "prod":
     log_dir = "/approot/data"
 else:
@@ -57,7 +90,7 @@ async def main():
         # Declare result queue
         result_channel = await connection.channel()
         await result_channel.declare_queue(
-            "emotion_detection_result_queue",  # Changed to match your use case
+            "emotion_detection_result_queue",
             durable=True
         )
 
@@ -70,7 +103,6 @@ async def main():
                     await process_message(message, result_channel)
                 except Exception as e:
                     logger.exception(f"Failed to process message: {e}")
-                    # Optionally: reject/nack the message if processing fails
                     await message.nack()
 
     except (KeyboardInterrupt, asyncio.CancelledError):
