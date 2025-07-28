@@ -64,7 +64,7 @@ logger.add(
     level=config.get("FILE_LOG_LEVEL", "INFO"),
     backtrace=True,
     diagnose=False,
-    colorize=True,
+    colorize=False,
     serialize=False,
     enqueue=True,
 )
