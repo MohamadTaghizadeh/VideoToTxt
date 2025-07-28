@@ -1,12 +1,57 @@
-In progress...
-> start local
-
-> data - StyleGAN
-
-> Docker
-
-> Demo
-
+Finished !
+### Output JSON Format
+```
+{
+  "status": true,
+  "code": "S100",
+  "message": "موفق",
+  "data": {
+    "request_id": "6",
+    "video_path": null,
+    "priority": 1,
+    "result": {
+      "total_frames": 150,
+      "frames_processed": 15,
+      "emotion_percentages": {
+        "affection": 0,
+        "anger": 0,
+        "annoyance": 0,
+        "anticipation": 33.33333333333333,
+        "aversion": 0,
+        "confidence": 100,
+        "disapproval": 0,
+        "disconnection": 0,
+        "disquietment": 0,
+        "doubt/Confusion": 0,
+        "embarrassment": 0,
+        "engagement": 13.333333333333334,
+        "esteem": 0,
+        "excitement": 80,
+        "fatigue": 0,
+        "fear": 0,
+        "happiness": 100,
+        "pain": 0,
+        "peace": 0,
+        "pleasure": 80,
+        "sadness": 0,
+        "sensitivity": 0,
+        "suffering": 0,
+        "surprise": 0,
+        "sympathy": 0,
+        "yearning": 0
+      }
+    },
+    "webhook_retry_count": 0,
+    "itime": "2025-07-28T11:35:15.247088",
+    "descr": null,
+    "id": "b399e837-1f35-4aae-be6d-8b8ab48b1c6f",
+    "status": 2,
+    "error": null,
+    "webhook_status_code": null,
+    "utime": "2025-07-28T11:35:20.215464"
+  }
+}
+```
 <header>
   
   # VideoToTxt
