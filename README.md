@@ -217,7 +217,10 @@ https://github.com/user-attachments/assets/bc226bb1-9fec-4600-8522-a9920613c885
 ### Terminal 3: Backend
 ```cd ".\src\backend"```
 ```uvicorn mainapi:app --host localhost --port 8000```
-
+```
+QUEUE_CONNECTION: amqp://guest:guest@localhost:5672/
+```
+> URL: http://localhost:8000/docs
 --------------------------------------------------------------------------------------
 ## Start to Dockerize
 
@@ -229,7 +232,8 @@ docker-compose up --build
 
 > Test Locally. Modify conf_dev.yml (Backend & Engine)
 ```
-QUEUE_CONNECTION: amqp://guest:guest@localhost/  
+QUEUE_CONNECTION: amqp://guest:guest@localhost/
+
 ```
 
 Then, install Rabbitmq
